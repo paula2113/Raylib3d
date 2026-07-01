@@ -14,6 +14,8 @@ $(TARGET): $(SRC)
 	@echo Compilando modo Debug...
 	mkdir -p bin
 	$(CXX) $(CXXFLAGS) $(SRC) -o $(TARGET) $(LDFLAGS)
+	@echo Copiando biblioteca dinamica automaticamente...
+	cp /mingw64/bin/libraylib.dll bin/
 
 run: all
 	./$(TARGET)
