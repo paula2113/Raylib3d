@@ -15,7 +15,7 @@
 // Constantes del Entorno y Objetos
 #define GRID_SLICES 20                            // Número de divisiones en la cuadrícula
 #define GRID_SPACING 1.0f                         // Espaciado entre las divisiones de la cuadrícula
-#define CUBE_POSITION (Vector3){0.0f, 1.0f, 0.0f} // Posición del cubo central en el mundo
+#define CUBE_POSITION (Vector3){0.0f, CUBE_SIZE / 2, 0.0f} // Posición del cubo central en el mundo
 #define CUBE_SIZE 1.0f                            // Tamaño del cubo (Ancho, Alto, Largo)
 
 // Constantes de la Interfaz (UI)
@@ -39,7 +39,10 @@ int main()
     // Establece el objetivo de fotogramas por segundo de la ventana
     SetTargetFPS(MAX_FPS);
     //objetos del entorno
-    Vector3 posicioncubo = CUBE_POSITION;
+    Vector3 posicionCubo = CUBE_POSITION;
+    float gravedad = -0.009f;
+    float suavidadCamara = 8.0f;
+    float velocidadPersonaje = 6.0f;
 
     while (!WindowShouldClose())
     {
@@ -48,48 +51,43 @@ int main()
         // =========================================================================
 if (IsKeyDown(KEY_A))
 {
-    posicioncubo = Vector3Add(posicioncubo, {-1.0f, 0.0f, 0.0f}); //Posicion actual, la desplazamos una posicion (izquierda)
+    // posicionCubo = Vector3Add(posicionCubo, {-1.0f, 0.0f, 0.0f});
+    posicionCubo.x = posicionCubo.x + -1.0f * velocidadPersonaje * GetFrameTime();
 }
 if (IsKeyDown(KEY_D))
 
-posicioncubo = Vector3Add(posicioncubo, {1.0f, 0.0f, 0.0f});  //Posicion actual, la desplazamos una posicion (derecha)
+// posicionCubo = Vector3Add(posicionCubo, {1.0f, 0.0f, 0.0f});
+ posicionCubo.x = posicionCubo.x + 1.0f * velocidadPersonaje * GetFrameTime();
 
 if (IsKeyDown(KEY_W))
 
-posicioncubo = Vector3Add(posicioncubo, {0.0f, 0.0f, -1.0f});  //Posicion actual, la desplazamos una posicion (delante)
+// posicionCubo = Vector3Add(posicionCubo, {0.0f, 0.0f, -1.0f});
+posicionCubo.z = posicionCubo.z + -1.0f * velocidadPersonaje * GetFrameTime();
 
 if (IsKeyDown(KEY_S))
 
-posicioncubo = Vector3Add(posicioncubo, {0.0f, 0.0f, 1.0f});  //Posicion actual, la desplazamos una posicion (detras)
-
-if (IsKeyPressed(KEY_SPACE))
-
-posicioncubo = Vector3Add(posicioncubo, {0.0f, 1.0f, 0.0f}); //Posicion actual, la desplazamos una posicion (arriba)
-
-if (IsKeyPressed(KEY_B))
-
-posicioncubo = Vector3Add(posicioncubo, {0.0f, -1.0f, 0.0f});  //Posicion actual, la desplazamos una posicion (abajo)
-
-if (IsKeyPressed(KEY_DOWN))
-
-posicioncubo = Vector3Add(posicioncubo, {0.0f, 0.0f, 1.0f});
-
-if (IsKeyPressed(KEY_UP))
-
-posicioncubo = Vector3Add(posicioncubo, {0.0f, 0.0f, -1.0f});
-
-if (IsKeyPressed (KEY_RIGHT))
-
-posicioncubo = Vector3Add(posicioncubo, {1.0f, 0.0f, 0.0f});
-
-if (IsKeyPressed (KEY_LEFT))
-
-posicioncubo = Vector3Add(posicioncubo, {-1.0f, 0.0f, 0.0f});
-
+//posicionCubo = Vector3Add(posicionCubo, {0.0f, 0.0f, 1.0f});
+posicionCubo.z = posicionCubo.z + 1.0f * velocidadPersonaje * GetFrameTime();
 
         // =========================================================================
         // 2. SECCIÓN DE ACTUALIZACIÓN (Cálculos, físicas y lógica)
-        // =========================================================================
+        // ========================================================================
+
+        if (posicionCubo.y > CUBE_SIZE / 2)
+        {
+           posicionCubo.y = posicionCubo.y + gravedad;
+           // equivalente a escribir -> posicioncubo.y += gravedad
+        }
+        else
+        {
+            posicionCubo.y = CUBE_SIZE / 2;
+        }
+
+        camera.target = Vector3Lerp(camera.target, posicionCubo, suavidadCamara * GetFrameTime());
+        // camera.position = Vector3Add(posicionCubo, INITIAL_CAMERA_POSITION) ;
+
+        camera.position = Vector3Lerp (camera.position, Vector3Add(posicionCubo, INITIAL_CAMERA_POSITION), suavidadCamara * GetFrameTime ()) ;
+
 
         // =========================================================================
         // 3. SECCIÓN DE RENDERIZADO (Dibujar todo en pantalla)
@@ -101,7 +99,7 @@ posicioncubo = Vector3Add(posicioncubo, {-1.0f, 0.0f, 0.0f});
         // Inicio del espacio de dibujo 3D
         BeginMode3D(camera);
         // Dibuja el cubo utilizando las constantes definidas
-        DrawCube(posicioncubo, CUBE_SIZE, CUBE_SIZE, CUBE_SIZE, RED);
+        DrawCube(posicionCubo, CUBE_SIZE, CUBE_SIZE, CUBE_SIZE, RED);
 
         // Dibuja la cuadrícula de guía en el suelo
         DrawGrid(GRID_SLICES, GRID_SPACING);
