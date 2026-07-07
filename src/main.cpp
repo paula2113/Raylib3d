@@ -1,4 +1,5 @@
 #include "raylib.h"
+#include "raymath.h"
 
 // Constantes de Configuración de la Ventana
 #define SCREEN_WIDTH 800  // Ancho de la ventana en píxeles
@@ -37,12 +38,54 @@ int main()
 
     // Establece el objetivo de fotogramas por segundo de la ventana
     SetTargetFPS(MAX_FPS);
+    //objetos del entorno
+    Vector3 posicioncubo = CUBE_POSITION;
 
     while (!WindowShouldClose())
     {
         // =========================================================================
         // 1. SECCIÓN DE ENTRADA (Capturar lo que hace el usuario)
         // =========================================================================
+if (IsKeyDown(KEY_A))
+{
+    posicioncubo = Vector3Add(posicioncubo, {-1.0f, 0.0f, 0.0f}); //Posicion actual, la desplazamos una posicion (izquierda)
+}
+if (IsKeyDown(KEY_D))
+
+posicioncubo = Vector3Add(posicioncubo, {1.0f, 0.0f, 0.0f});  //Posicion actual, la desplazamos una posicion (derecha)
+
+if (IsKeyDown(KEY_W))
+
+posicioncubo = Vector3Add(posicioncubo, {0.0f, 0.0f, -1.0f});  //Posicion actual, la desplazamos una posicion (delante)
+
+if (IsKeyDown(KEY_S))
+
+posicioncubo = Vector3Add(posicioncubo, {0.0f, 0.0f, 1.0f});  //Posicion actual, la desplazamos una posicion (detras)
+
+if (IsKeyPressed(KEY_SPACE))
+
+posicioncubo = Vector3Add(posicioncubo, {0.0f, 1.0f, 0.0f}); //Posicion actual, la desplazamos una posicion (arriba)
+
+if (IsKeyPressed(KEY_B))
+
+posicioncubo = Vector3Add(posicioncubo, {0.0f, -1.0f, 0.0f});  //Posicion actual, la desplazamos una posicion (abajo)
+
+if (IsKeyPressed(KEY_DOWN))
+
+posicioncubo = Vector3Add(posicioncubo, {0.0f, 0.0f, 1.0f});
+
+if (IsKeyPressed(KEY_UP))
+
+posicioncubo = Vector3Add(posicioncubo, {0.0f, 0.0f, -1.0f});
+
+if (IsKeyPressed (KEY_RIGHT))
+
+posicioncubo = Vector3Add(posicioncubo, {1.0f, 0.0f, 0.0f});
+
+if (IsKeyPressed (KEY_LEFT))
+
+posicioncubo = Vector3Add(posicioncubo, {-1.0f, 0.0f, 0.0f});
+
 
         // =========================================================================
         // 2. SECCIÓN DE ACTUALIZACIÓN (Cálculos, físicas y lógica)
@@ -58,7 +101,7 @@ int main()
         // Inicio del espacio de dibujo 3D
         BeginMode3D(camera);
         // Dibuja el cubo utilizando las constantes definidas
-        DrawCube(CUBE_POSITION, CUBE_SIZE, CUBE_SIZE, CUBE_SIZE, RED);
+        DrawCube(posicioncubo, CUBE_SIZE, CUBE_SIZE, CUBE_SIZE, RED);
 
         // Dibuja la cuadrícula de guía en el suelo
         DrawGrid(GRID_SLICES, GRID_SPACING);
